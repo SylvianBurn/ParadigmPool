@@ -29,10 +29,25 @@ myTruple :: a -> b -> c -> (a, b, c)
 myTruple a b c = (a, b, c)
 
 myFst :: (a, b) -> a
-myFst (a, b) = a
+myFst (a, _) = a
 
 mySnd :: (a, b) -> b
-mySnd (a, b) = b
+mySnd (_, b) = b
 
 mySwap :: (a, b) -> (b, a)
 mySwap (a, b) = (b, a)
+
+myHead :: [a] -> a
+myHead [] = error "Empty list"
+myHead (x:xs) = x
+
+myTail :: [a] -> [a]
+myTail [] = error "Empty list"
+myTail (x:xs) = xs
+
+myLength :: [a] -> Int
+myLength [] = 0
+myLength (x:xs) = 1 + (myLength xs)
+
+myNth :: [a] -> Int -> a
+    | (myLength a)
