@@ -50,8 +50,23 @@ myLength [] = 0
 myLength (x:xs) = 1 + (myLength xs)
 
 myNth :: [a] -> Int -> a
+myNth [] y = error "Empty list"
 myNth (x:xs) y
     | (myLength (x:xs)) < y = error "Too large index"
     | (myIsNeg y) == True = error "Negative index"
-    | y == 0 = x
-    | otherwise = myNth xs (y-1)
+myNth (x:xs) 0 = x
+myNth (x:xs) y = myNth xs (y-1)
+
+myTake :: Int -> [a] -> [a]
+myTake index [] = error "Empty list"
+myTake index (x:xs)
+    | (myIsNeg index) == True = error "Index is negative"
+    | (myLength (x:xs)) <= index = (x:xs)
+myTake 0 (x:xs) = []
+myTake index (x:xs) = x: (myTake (index - 1) xs)
+
+myDrop :: Int -> [a] -> [a]
+myDrop index [] = error "Empty list"
+myDrop index (x:xs)
+    | (myIsNeg index) == True = error "Negative index"
+    | (myLength (x:xs)) <= index = []
