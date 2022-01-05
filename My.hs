@@ -50,4 +50,8 @@ myLength [] = 0
 myLength (x:xs) = 1 + (myLength xs)
 
 myNth :: [a] -> Int -> a
-    | (myLength a)
+myNth (x:xs) y
+    | (myLength (x:xs)) < y = error "Too large index"
+    | (myIsNeg y) == True = error "Negative index"
+    | y == 0 = x
+    | otherwise = myNth xs (y-1)
