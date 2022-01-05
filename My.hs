@@ -95,8 +95,6 @@ myZip [] _ = []
 myZip _ [] = []
 myZip (x:xs) (y:ys) = myTuple x y : myZip xs ys
 
--- myUnzip :: [(a,b)] -> ([a], [b])
--- myUnzip [] = (a, b)
--- myUnzip (x:xs) = a: myFst x
--- myUnzip (x:xs) = b: mySnd x
--- myUnzip (x:xs) = myUnzip xs
+myUnzip :: [(a,b)] -> ([a], [b])
+myUnzip [] = ([], [])
+myUnzip ((a, b) : y) = myTuple (a : myFst (myUnzip y)) (b : mySnd (myUnzip y))
