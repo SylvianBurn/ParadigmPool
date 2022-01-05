@@ -70,3 +70,5 @@ myDrop index [] = error "Empty list"
 myDrop index (x:xs)
     | (myIsNeg index) == True = error "Negative index"
     | (myLength (x:xs)) <= index = []
+myDrop 0 (x:xs) = (x:xs)
+myDrop index (x:xs) = myDrop (index - 1) xs
