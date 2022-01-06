@@ -1,6 +1,9 @@
 import System.Exit
 import System.Environment
 import Data.Char
+import Data.Maybe
+import Prelude
+import Control.Monad
 
 myElem :: Eq a => a -> [a] -> Bool
 myElem a [] = False
@@ -48,5 +51,43 @@ readInt (x:xs)
 getLineLength :: IO Int
 getLineLength = do
     line <- getLine
-    print line
     return $ length line
+
+printAndGetLength :: String -> IO Int
+printAndGetLength s = do
+    putStrLn s
+    return $ length s
+
+printBox :: Int -> IO ()
+printBox nb = do
+    if (nb <= 0)
+        then return ()
+    else do
+        putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"])
+        putStr $ concat $ replicate (nb-2) (concat ["|", (replicate ((nb*2)-2) ' '), "|\n"])
+        putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"])
+
+myAppend :: [a] -> [a] -> [a]
+myAppend [] y = y
+myAppend (x:xs) [] = (x:xs)
+myAppend (x:xs) y = x: (myAppend xs y)
+
+getLines :: Int -> IO [String]
+getLines x = replicateM x getLine
+
+concatLines :: Int -> IO String
+concatLines nb = do
+    line <- (getLines nb)
+    return (concat line)
+
+readInt2 :: [Char] -> Maybe Int
+readInt2 [] = Nothing
+readInt2 (x:xs)
+    | all isDigit (x:xs) == True = Just (read (x:xs) :: Int)
+    | x == '-' && all isDigit xs == True = Just ((read xs :: Int) * (-1))
+    | otherwise = Nothing
+
+getInt :: IO (Maybe Int)
+getInt = do
+    line <- getLine
+    return (readInt line)
