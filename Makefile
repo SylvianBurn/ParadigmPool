@@ -5,24 +5,24 @@
 ## Makefile
 ##
 
-CC    =    ghc -dynamic
+CC	=	ghc -dynamic
 
-SRC    =    DoOp.hs
+SRC	=	DoOp.hs
 
-EXEC    =    doop
+EXEC	=	doop
 
-all:    $(EXEC)
+all:	$(EXEC)
 
-$(EXEC):    $(OBJ)
+$(EXEC):
 
-$(CC) -o $(EXEC) $(SRC)
+	$(CC)	$(SRC) -o $(EXEC)
 
 clean:
-    rm -rf *.hi *.o
+	rm -rf *.hi *.o
 
 fclean: clean
-    rm -rf $(EXEC)
+	rm -rf $(EXEC)
 
-re:    fclean all
+re:	fclean all
 
 .PHONY: clean fclean re all

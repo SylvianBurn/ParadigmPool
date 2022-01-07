@@ -106,17 +106,23 @@ myNth (x:xs) y
 myNth (x:xs) 0 = x
 myNth (x:xs) y = myNth xs (y-1)
 
+readInt2 :: [Char] -> Int
+readInt2 (x:xs)
+    | all isDigit (x:xs) == True = (read (x:xs) :: Int)
+    | x == '-' && all isDigit xs == True = ((read xs :: Int) * (-1))
+    | otherwise = 0
+
 main :: IO ()
 main = do
     args <- getArgs
-    case myLength args /= 3  myElem (myNth args 1) ["+","-","/","*","%"] == False
-         readInt (myNth args 0) == Nothing || readInt (myNth args 2) == Nothing of
+    case (myLength args /= 3 || myElem (myNth args 1) ["+","-","/","*","%"] == False
+        || readInt (myNth args 0) == Nothing || readInt (myNth args 2) == Nothing) of
         True  -> exitWith (ExitFailure 84)
         False  -> pure ()
     case myNth args 1 of
-        "+" -> print $ myReadInt (myNth args 0) + myReadInt (myNth args 2)
-        "-" -> print $ myReadInt (myNth args 0) - myReadInt (myNth args 2)
-        "%" -> print $ mod myReadInt (myNth args 0) myReadInt (myNth args 2)
-        "/" -> print $ div myReadInt (myNth args 0) myReadInt (myNth args 2)
-        "*" -> print $ myReadInt (myNth args 0) * myReadInt (myNth args 2)
+        "+" -> print $ readInt2 (myNth args 0) + readInt2 (myNth args 2)
+        "-" -> print $ readInt2 (myNth args 0) - readInt2 (myNth args 2)
+        "%" -> print $ (readInt2 (myNth args 0)) `mod` (readInt2 (myNth args 2))
+        "/" -> print $ div (readInt2 (myNth args 0)) (readInt2 (myNth args 2))
+        "*" -> print $ readInt2 (myNth args 0) * readInt2 (myNth args 2)
         _ -> print "Nothing"
