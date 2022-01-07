@@ -44,9 +44,11 @@ maybeDo fct (Just a) (Just b) = Just (fct a b)
 
 readInt :: [Char] -> Maybe Int
 readInt [] = Nothing
+readInt ('-':xs)
+    | all isDigit xs == True = Just ((read xs :: Int) * (-1))
+    | otherwise = Nothing
 readInt (x:xs)
     | all isDigit (x:xs) == True = Just (read (x:xs) :: Int)
-    | x == '-' && all isDigit xs == True = Just ((read xs :: Int) * (-1))
     | otherwise = Nothing
 
 getLineLength :: IO Int
@@ -55,19 +57,16 @@ getLineLength = do
     return $ length line
 
 printAndGetLength :: String -> IO Int
-printAndGetLength s = do
-    putStrLn s
-    return $ length s
+printAndGetLength s = putStrLn s >> return $ length s
 
 printBox :: Int -> IO ()
-printBox 1 = do
-    putStr "+\n"
-printBox nb = do
+printBox 1 = putStr "+\n"
+printBox nb =
     if (nb <= 0)
         then return ()
-    else do
-        putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"])
-        putStr $ concat $ replicate (nb-2) (concat ["|", (replicate ((nb*2)-2) ' '), "|\n"])
+    else putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"]) >>
+        putStr $ concat $ replicate (nb-2) (concat
+            ["|", (replicate ((nb*2)-2) ' '), "|\n"]) >>
         putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"])
 
 myAppend :: [a] -> [a] -> [a]
@@ -88,7 +87,6 @@ getInt = do
     line <- getLine
     return (readInt line)
 
-
 myLength :: [a] -> Int
 myLength [] = 0
 myLength (x:xs) = 1 + (myLength xs)
@@ -107,16 +105,20 @@ myNth (x:xs) 0 = x
 myNth (x:xs) y = myNth xs (y-1)
 
 readInt2 :: [Char] -> Int
+readInt2 ('-':xs)
+    | all isDigit xs == True = ((read xs :: Int) * (-1))
+    | otherwise = 0
 readInt2 (x:xs)
     | all isDigit (x:xs) == True = (read (x:xs) :: Int)
-    | x == '-' && all isDigit xs == True = ((read xs :: Int) * (-1))
     | otherwise = 0
 
 main :: IO ()
 main = do
     args <- getArgs
-    case (myLength args /= 3 || myElem (myNth args 1) ["+","-","/","*","%"] == False
-        || readInt (myNth args 0) == Nothing || readInt (myNth args 2) == Nothing) of
+    case (myLength args /= 3 ||
+        myElem (myNth args 1) ["+","-","/","*","%"] == False
+        || readInt (myNth args 0) == Nothing
+        || readInt (myNth args 2) == Nothing) of
         True  -> exitWith (ExitFailure 84)
         False  -> pure ()
     case myNth args 1 of
