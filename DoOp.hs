@@ -57,17 +57,17 @@ getLineLength = do
     return $ length line
 
 printAndGetLength :: String -> IO Int
-printAndGetLength s = putStrLn s >> return $ length s
+printAndGetLength s = (putStrLn s) >> return (length s)
 
 printBox :: Int -> IO ()
-printBox 1 = putStr "+\n"
+printBox 1 = putStr "++\n"
 printBox nb =
     if (nb <= 0)
         then return ()
-    else putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"]) >>
-        putStr $ concat $ replicate (nb-2) (concat
-            ["|", (replicate ((nb*2)-2) ' '), "|\n"]) >>
-        putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"])
+    else (putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"])) >>
+        (putStr $ concat $ replicate 
+        (nb-2) (concat ["|", (replicate ((nb*2)-2) ' '), "|\n"])) >>
+        (putStr (concat ["+", (replicate ((nb*2)-2) '-'), "+\n"]))
 
 myAppend :: [a] -> [a] -> [a]
 myAppend [] y = y
@@ -112,6 +112,16 @@ readInt2 (x:xs)
     | all isDigit (x:xs) == True = (read (x:xs) :: Int)
     | otherwise = 0
 
+trsh :: [String] -> IO ()
+trsh args = do
+    case myNth args 1 of
+        "+" -> print $ readInt2 (myNth args 0) + readInt2 (myNth args 2)
+        "-" -> print $ readInt2 (myNth args 0) - readInt2 (myNth args 2)
+        "%" -> print $ (readInt2 (myNth args 0)) `mod` (readInt2 (myNth args 2))
+        "/" -> print $ div (readInt2 (myNth args 0)) (readInt2 (myNth args 2))
+        "*" -> print $ readInt2 (myNth args 0) * readInt2 (myNth args 2)
+        _ -> print "Nothing"
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -120,11 +130,4 @@ main = do
         || readInt (myNth args 0) == Nothing
         || readInt (myNth args 2) == Nothing) of
         True  -> exitWith (ExitFailure 84)
-        False  -> pure ()
-    case myNth args 1 of
-        "+" -> print $ readInt2 (myNth args 0) + readInt2 (myNth args 2)
-        "-" -> print $ readInt2 (myNth args 0) - readInt2 (myNth args 2)
-        "%" -> print $ (readInt2 (myNth args 0)) `mod` (readInt2 (myNth args 2))
-        "/" -> print $ div (readInt2 (myNth args 0)) (readInt2 (myNth args 2))
-        "*" -> print $ readInt2 (myNth args 0) * readInt2 (myNth args 2)
-        _ -> print "Nothing"
+        _ -> trsh args
