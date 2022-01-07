@@ -116,7 +116,7 @@ main = do
     case myNth args 1 of
         "+" -> print $ myReadInt (myNth args 0) + myReadInt (myNth args 2)
         "-" -> print $ myReadInt (myNth args 0) - myReadInt (myNth args 2)
-        "*" -> print $ myReadInt (myNth args 0) * myReadInt (myNth args 2)
-        "/" -> print $ div myReadInt (myNth args 0) myReadInt (myNth args 2)
         "%" -> print $ mod myReadInt (myNth args 0) myReadInt (myNth args 2)
+        "/" -> print $ div myReadInt (myNth args 0) myReadInt (myNth args 2)
+        "*" -> print $ myReadInt (myNth args 0) * myReadInt (myNth args 2)
         _ -> print "Nothing"
