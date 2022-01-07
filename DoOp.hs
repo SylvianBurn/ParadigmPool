@@ -4,6 +4,7 @@ import Data.Char
 import Data.Maybe
 import Prelude
 import Control.Monad
+import System.Directory.Internal.Prelude (getArgs)
 
 myElem :: Eq a => a -> [a] -> Bool
 myElem a [] = False
@@ -59,6 +60,8 @@ printAndGetLength s = do
     return $ length s
 
 printBox :: Int -> IO ()
+printBox 1 = do
+    putStr "+\n"
 printBox nb = do
     if (nb <= 0)
         then return ()
@@ -80,14 +83,40 @@ concatLines nb = do
     line <- (getLines nb)
     return (concat line)
 
-readInt2 :: [Char] -> Maybe Int
-readInt2 [] = Nothing
-readInt2 (x:xs)
-    | all isDigit (x:xs) == True = Just (read (x:xs) :: Int)
-    | x == '-' && all isDigit xs == True = Just ((read xs :: Int) * (-1))
-    | otherwise = Nothing
-
 getInt :: IO (Maybe Int)
 getInt = do
     line <- getLine
     return (readInt line)
+
+
+myLength :: [a] -> Int
+myLength [] = 0
+myLength (x:xs) = 1 + (myLength xs)
+
+myIsNeg :: Int -> Bool
+myIsNeg x
+    | x < 0 = True
+    | otherwise = False
+
+myNth :: [a] -> Int -> a
+myNth [] y = error "Empty list"
+myNth (x:xs) y
+    | (myLength (x:xs)) < y = error "Too large index"
+    | (myIsNeg y) == True = error "Negative index"
+myNth (x:xs) 0 = x
+myNth (x:xs) y = myNth xs (y-1)
+
+main :: IO ()
+main = do
+    args <- getArgs
+    case myLength args /= 3  myElem (myNth args 1) ["+","-","/","*","%"] == False
+         readInt (myNth args 0) == Nothing || readInt (myNth args 2) == Nothing of
+        True  -> exitWith (ExitFailure 84)
+        False  -> pure ()
+    case myNth args 1 of
+        "+" -> print $ myReadInt (myNth args 0) + myReadInt (myNth args 2)
+        "-" -> print $ myReadInt (myNth args 0) - myReadInt (myNth args 2)
+        "*" -> print $ myReadInt (myNth args 0) * myReadInt (myNth args 2)
+        "/" -> print $ div myReadInt (myNth args 0) myReadInt (myNth args 2)
+        "%" -> print $ mod myReadInt (myNth args 0) myReadInt (myNth args 2)
+        _ -> print "Nothing"
